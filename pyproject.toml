@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "py-algorithms"
+version = "0.1.0"
+description = ""
+authors = ["jwson1999 <jwson@rbrain.co.kr>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
