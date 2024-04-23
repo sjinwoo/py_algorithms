@@ -30,18 +30,18 @@ def dfs(y, x):
         elif GROUND[next_y][next_x] >= GROUND[y][x] and VISITED[next_y][next_x] == 0 and not is_cut:
             for k in range(1, K+1):
                 cutted_height = GROUND[next_y][next_x] - k
-
                 if cutted_height < GROUND[y][x]:
                     GROUND[next_y][next_x] = cutted_height
                     is_cut = True
                     VISITED[next_y][next_x] = VISITED[y][x] + 1
                     dfs(next_y, next_x)
 
+                    # 최대값 갱신
                     if VISITED[next_y][next_x] > result:
                         result = VISITED[next_y][next_x]
-                    VISITED[next_y][next_x] = 0
 
-                    # 깎은 것 원복
+                    # 방문 기록 및 깎은 것 원복
+                    VISITED[next_y][next_x] = 0
                     is_cut = False
                     GROUND[next_y][next_x] += k
                     
