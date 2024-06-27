@@ -1,29 +1,30 @@
-def check_connection(curr_path: int, next_tunnel: tuple[int]):
+def check_connection(curr_path, next_tunnel):
     if curr_path % 2 == 0:
         return (curr_path + 1) in next_tunnel
     else:
         return (curr_path - 1) in next_tunnel
 
-def validate_range(y, x) -> bool:
+def validate_range(y, x):
     global N, M
 
     return 0 <= y < N and 0 <= x < M
 
 def bfs(r, c):
-    global TUNNEL, UNDER_GROUND, N, M, L, MOVE, VISITED
-
-    result = 0
+    global TUNNEL, MOVE, UNDER_GROUND, N, M, L
+ 
     # 시작점 queue에 넣고 방문할 좌표가 없을 때 까지 반복
+    visited = [[0] * M for _ in range(N)]
+    result = 1
+    
+    visited[r][c] = 1
     queue = [(r, c)]
     
     while queue != []:
-        print(queue)
-
-        # 방문할 좌표 꺼내서 방문했다고 표시
-        curr_y, curr_x = queue.pop(0)
-        result += 1
-
-        if L > 0:
+        if L == 1: break
+        for _ in range(len(queue)):
+            # 방문할 좌표 꺼내기
+            curr_y, curr_x = queue.pop(0)
+            
             # 현재 좌표에서 터널 유형에 따라 상, 하, 좌, 우 순회
             for m in TUNNEL[UNDER_GROUND[curr_y][curr_x]]:
                 _X, _Y = MOVE[m]
@@ -34,15 +35,12 @@ def bfs(r, c):
                 if not validate_range(next_y, next_x) or UNDER_GROUND[next_y][next_x] == 0: 
                     continue
                 
-                # 방문한적 없고, 다음 좌표가 올바르게 연결된 터널이라면 Queue에 넣어서 다음에 방문하기
-                if VISITED[next_y][next_x] == 0 and check_connection(m, TUNNEL[UNDER_GROUND[next_y][next_x]]):
-                    VISITED[curr_y][curr_x] = 1
+                # 방문한적 없고, 다음 좌표가 올바르게 연결된 터널이라면 Queue에 넣어서 다음에 방문. visited = 1
+                if visited[next_y][next_x] == 0 and check_connection(m, TUNNEL[UNDER_GROUND[next_y][next_x]]):
+                    visited[next_y][next_x] = 1
                     queue.append((next_y, next_x))
-
-            L -= 1
-
-    for a in VISITED:
-        print(a)
+                    result += 1
+        L -= 1
 
     return result
 
@@ -71,10 +69,7 @@ if __name__ == "__main__":
         for _ in range(N):
             UNDER_GROUND.append(list(map(int, input().split())))
 
-        VISITED = [[0] * M for _ in range(N)]
-        VISITED[R][C] = 1
         result = bfs(R, C)
-
         result_list.append(result)
 
     for idx, res in enumerate(result_list, start=1):
